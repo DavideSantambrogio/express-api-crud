@@ -56,27 +56,44 @@ exports.getPostBySlug = async (req, res) => {
 
 // Ottenere tutti i post con opzione di filtro per pubblicati e non pubblicati
 exports.getPosts = async (req, res) => {
-    const { published } = req.query;
     try {
-        let posts;
+        const where = {};
+        const { published, page = 1, pageSize = 5 } = req.query;
 
-        // Se è stato fornito un parametro "published" nel query string
+        // Aggiungi il filtro per lo stato di pubblicazione se specificato
         if (published !== undefined) {
-            // Converti il valore in boolean
-            const isPublished = published === 'true';
-
-            // Filtra i post in base allo stato di pubblicazione
-            posts = await prisma.post.findMany({
-                where: { published: isPublished },
-            });
-        } else {
-            // Se non è fornito alcun parametro "published", restituisci tutti i post
-            posts = await prisma.post.findMany();
+            where.published = published === 'true';
         }
 
-        res.status(200).json(posts);
+        // Calcola l'offset per la paginazione
+        const offset = (page - 1) * pageSize;
+
+        // Conta il numero totale di post
+        const totalItems = await prisma.post.count({ where });
+
+        // Calcola il numero totale di pagine
+        const totalPages = Math.ceil(totalItems / pageSize);
+
+        // Verifica se la pagina richiesta esiste
+        if (page > totalPages) {
+            throw new Error('La pagina richiesta non esiste.');
+        }
+
+        // Ottieni i post con paginazione
+        const posts = await prisma.post.findMany({
+            where,
+            take: parseInt(pageSize),
+            skip: parseInt(offset)
+        });
+
+        res.json({
+            data: posts,
+            page: page,
+            totalItems: totalItems,
+            totalPages: totalPages
+        });
     } catch (error) {
-        res.status(500).json({ error: 'Qualcosa è andato storto' });
+        res.status(400).json({ error: error.message });
     }
 };
 

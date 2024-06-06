@@ -8,10 +8,10 @@ Vi chiediamo di definire i seguenti endpoint:
 - [x] GET /posts/:slug per recuperare un post utilizzando il suo slug.
 - [x] GET /posts per recuperare tutti i post presenti nel database, con la possibilità di filtrare per:
 - [x] Post pubblicati.
-- [x] Post che contengono una determinata parola nel titolo o nel contenuto.
+- [] Post che contengono una determinata parola nel titolo o nel contenuto.
 - [x] PUT /posts/:slug per aggiornare un post.
 - [x] DELETE /posts/:slug per eliminare un post.
 BONUS:
-- [] Implementare la paginazione.
-- [] Gestire gli errori, restituendo uno stato HTTP 404 e un messaggio di errore, nel caso in cui una rotta non sia stata trovata.
-- [] Gestire gli errori, restituendo uno stato HTTP 500 e un messaggio di errore, nel caso in cui venga sollevata un'eccezione dal Prisma Client.
+- [x] Implementare la paginazione.
+- [x] Gestire gli errori, restituendo uno stato HTTP 404 e un messaggio di errore, nel caso in cui una rotta non sia stata trovata.
+- [x] Gestire gli errori, restituendo uno stato HTTP 500 e un messaggio di errore, nel caso in cui venga sollevata un'eccezione dal Prisma Client.
